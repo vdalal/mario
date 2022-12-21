@@ -17,8 +17,10 @@ public class Window {
     private static Window window = null;
 
     private Window() {
-        this.width = 1920;
-        this.height = 1080;
+        // this.width = 1920;
+        this.width = 1080;
+        // this.height = 1080;
+        this.height = 720;
         this.title = "Mario";
     }
 
