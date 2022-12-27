@@ -4,6 +4,7 @@ package jade;
 
 // import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
 
+import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 import renderer.Shader;
@@ -22,10 +23,10 @@ public class LevelEditorScene extends Scene {
 
     private float[] vertexArray = {
             // position             // color including alpha    // notes
-             0.5f, -0.5f,  0.0f,      1.0f, 0.0f, 0.0f, 1.0f,   // bottom right (red)     0
-            -0.5f,  0.5f,  0.0f,      0.0f, 1.0f, 0.0f, 1.0f,   // top left (green)       1
-             0.5f,  0.5f,  0.0f,      0.0f, 0.0f, 1.0f, 1.0f,   // top right (blue)       2
-            -0.5f, -0.5f,  0.0f,      1.0f, 1.0f, 1.0f, 1.0f,   // bottom left (yellow)   3
+             100.5f, 0.5f,  0.0f,       1.0f, 0.0f, 0.0f, 1.0f,   // bottom right (red)     0
+            0.5f,  100.5f,  0.0f,       0.0f, 1.0f, 0.0f, 1.0f,   // top left (green)       1
+             100.5f,  100.5f,  0.0f,    1.0f, 0.0f, 1.0f, 1.0f,   // top right (blue)       2
+            0.5f, 0.5f,  0.0f,          1.0f, 1.0f, 0.0f, 1.0f,   // bottom left (yellow)   3
     };
 
     // IMPORTANT: This must be in counter-clockwise order
@@ -54,6 +55,8 @@ public class LevelEditorScene extends Scene {
 
     @Override
     public void init() {
+        this.camera = new Camera(new Vector2f());
+
         defaultShader = new Shader("assets/shaders/default.glsl");
         defaultShader.compile();
 
@@ -95,8 +98,12 @@ public class LevelEditorScene extends Scene {
     }
     @Override
     public void update(float dt) {
+        camera.position.x -= dt * 50.0f;
+
         // Bind the shader program
         defaultShader.use();
+        defaultShader.uploadMat4f("uProjection", camera.getProjectionMatrix());
+        defaultShader.uploadMat4f("uView", camera.getViewMatrix());
 
         // Bind the VAO that we are using
         glBindVertexArray(vaoID);
